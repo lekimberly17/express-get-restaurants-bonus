@@ -1,10 +1,24 @@
-const express = require("express")
+const express = require('express')
 const app = express()
-const port = 3000;
-const {Restaurant, Menu, Item} = require("./models/index")
-const {sequelize} = require("./db")
+const { Restaurant } = require('./models/index')
+const { sequelize } = require('./db')
+
+const port = 3000
 
 //TODO: 
+
+// Make a GET route using Express to handle the endpoint “restaurants”
+app.get('/restaurants', async (req, res) => {
+    const restaurants = await Restaurant.findAll({
+        include: [{ 
+          model: Menu, // Argument 1
+          include: [{ 
+            model: Item  // Argument 2
+          }] 
+        }]
+      })
+    res.send(restaurants);
+})
 
 app.listen(port, () => {
     sequelize.sync()
